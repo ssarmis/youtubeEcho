@@ -4,7 +4,7 @@
   "description": "Listen to YouTube videos.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --harmony server.js testing",
     "start": "node --harmony server.js"
   },
   "author": "Streanga Sarmis-Stefan",

@@ -34,7 +34,14 @@ app.get('/music', (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+let server = app.listen(3000, () => {
   console.log('Listening on port 3000!');
+  
+  process.argv.forEach((val, index, array) => {
+    if(val === "testing"){
+      setInterval(process.exit(0), 3000);
+    }
+  });
 });
+
 
