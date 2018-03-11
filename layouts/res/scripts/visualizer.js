@@ -115,6 +115,6 @@ function visualizer(src, color, scolor){
   }
 }
 
-let vis = new visualizer('http://localhost:3000/music?id=AXa3rUVDt_g', '#ff0000', '#770022');
+let vis = new visualizer('http://localhost:3000/music?id=QHRuTYtSbJQ', '#ff0000', '#770022');
 
 vis.play();

@@ -19,19 +19,11 @@ app.get('/', (req, res) => {
   res.sendFile(`${ROOT_PATH}/index.html`);
 });
 
-app.get('/res', (req, res) => {
-  res.send(`${ROOT_PATH}index.html`);
-});
-
 app.get('/music', (req, res) => {
 
   var requestUrl = `https://www.youtube.com/watch?v=${req.query.id}`;
 
-  try {
-    yas(requestUrl).pipe(res);
-  } catch (exception) {
-    res.status(500).send(exception);
-  }
+  yas(requestUrl).pipe(res);
 });
 
 let server = app.listen(3000, () => {
@@ -44,4 +36,8 @@ let server = app.listen(3000, () => {
   });
 });
 
+// MUST BE CHANGED
+// IMPLEMENT CLUSTER AND DOMAIN FOR HANDLING EXCEPTIONS
+process.on('uncaughtException', err => console.log(err));
+//
 
