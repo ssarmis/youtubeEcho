@@ -111,10 +111,10 @@ function visualizer(src, color, scolor){
 
 
   this.limitOnHeight = val => {
-    return ((this.canvas.height / 4) * (val / 128));
+    return ((this.canvas.height / 3) * (val / 128));
   }
 }
 
-let vis = new visualizer('http://localhost:3000/music?id=QHRuTYtSbJQ', '#ff0000', '#770022');
+let vis = new visualizer('http://localhost:3000/music?id=5dznGsQmwuQ', '#ff0000', '#770022');
 
 vis.play();
