@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>YoutubeEcho | Your YouTube music hub</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width = device-width, initial-scale = 1">
+
+  <link rel="stylesheet" type="text/css" href="res/style.css">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
+</head>
+<body>
+
+  <div id="vis">
+
+  </div>
+  
+  <div id="vis-container"></div>
+
+  <div class="wrapper">
+    <form class="login">
+      <div id="logo-img">
+        <img src="res/imgs/logo.png" width="20%" height="20%">
+      </div>
+      
+      <input type="text" placeholder="Email" name="email" autofocus/>
+      <i class="fa fa-user"></i>
+      <input type="password" placeholder="Password" name="password"/>
+      <i class="fa fa-key"></i>
+      <a href="#">Forgot your password?</a>
+      <button id="login-spinner">
+        <span class="state">Log in</span>
+      </button>
+    </form>
+  </div>
+
+  <script src="res/jquery-3.3.1.min.js"></script>
+  <script src="res/bootstrap/js/bootstrap.min.js"></script>
+  <script src="res/scripts/login.js"></script>
+  <script src="res/scripts/visualizer.js"></script>
+</body>
+</html>
