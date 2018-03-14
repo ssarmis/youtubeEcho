@@ -157,22 +157,35 @@ function visualizer(opt){
     requestAnimationFrame(this.draw);
     this.analyser.getByteFrequencyData(this.frequencyData);
 
-    let size = this.half / (this.analyser.frequencyBinCount - freqOffset);
-
+    let size = !this.isMobile() ? 
+      this.half / (this.analyser.frequencyBinCount - freqOffset) :
+      this.canvas.width / (this.analyser.frequencyBinCount - freqOffset);
     for (let i = 0; i < this.analyser.frequencyBinCount - freqOffset; ++i) {
       let freqValue = this.limitOnHeight(this.frequencyData[i]);
 
       this.ctx.fillStyle = this.mapColor(this.normalize(freqValue), this.percentColors);
-      this.ctx.fillRect(i * (size), this.middle - midoff - freqValue, (size - 0.5), freqValue);
-      this.ctx.fillRect(this.half + (this.analyser.frequencyBinCount - 1 - i) * (size ) - size * freqOffset, this.middle - midoff - freqValue, (size - 0.5), freqValue);
 
-      this.ctx.fillStyle = this.mapColor(this.normalize(freqValue), this.weakPercentColors);
-      this.ctx.fillRect(i * (size), this.middle + midoff, (size - 0.5), freqValue);
-      this.ctx.fillRect(this.half + (this.analyser.frequencyBinCount - 1 - i) * (size) - size * freqOffset, this.middle + midoff, (size - 0.5), freqValue);
-
+      if(!this.isMobile()){
+        this.ctx.fillRect(i * (size), this.middle - midoff - freqValue, (size - 0.5), freqValue);
+        this.ctx.fillRect(this.half + (this.analyser.frequencyBinCount - 1 - i) * (size ) - size * freqOffset, this.middle - midoff - freqValue, (size - 0.5), freqValue);
+        
+        this.ctx.fillStyle = this.mapColor(this.normalize(freqValue), this.weakPercentColors);
+        this.ctx.fillRect(i * (size), this.middle + midoff, (size - 0.5), freqValue);
+        this.ctx.fillRect(this.half + (this.analyser.frequencyBinCount - 1 - i) * (size) - size * freqOffset, this.middle + midoff, (size - 0.5), freqValue);
+      } else {
+        this.ctx.fillRect(i * (size), 2 * this.middle - midoff - freqValue, (size), freqValue);
+      }
     }
   }
 
+
+  this.isMobile = () => {
+     if(window.innerWidth <= 800 && window.innerHeight <= 600) {
+       return true;
+     } else {
+       return false;
+     }
+  }
 
   this.limitOnHeight = val => {
     return ((this.canvas.height / 2) * (val / 256));
