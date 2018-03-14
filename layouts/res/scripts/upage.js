@@ -28,15 +28,15 @@ function startVis(id){
       vis.close();
     }
 
-    vis = new visualizer(opt);
-
     if(!alreadyUp){
       $('#player-container').slideDown('fast', function() {
+        vis = new visualizer(opt);
         vis.onlyVisualize();
         //vis.play();
         alreadyUp = !alreadyUp;
       });
     } else {
+        vis = new visualizer(opt);
         vis.play();
     }
   });
