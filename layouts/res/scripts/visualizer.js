@@ -4,32 +4,78 @@ window.AudioContext =
 window.AudioContext || window.webkitAudioContext || 
 window.mozAudioContext || window.msAudioContext;
 
-function visualizer(src, color, scolor){
+/*
+
+opt
+  src
+  coloru
+  colord
+  width
+  height
+*/
+
+function visualizer(opt){
 
   this.ready = false;
-  this.width = '100%';
-  this.height = '100%';
 
-  $('#vis-container').append(`<canvas id="vis-canvas" width="${this.width}" height="${this.height}"></canvas>`);
+  this.src = opt.src;
+
+  this.coloru = opt.coloru === undefined ? 
+    '#ff0000' :
+    opt.coloru;
+
+  this.colord = opt.colord === undefined ?
+    '#770022' :
+    opt.colord;
+
+  if(this.src === undefined){
+    console.error('No source was provided.');
+    return;
+  }
+
+
+  $('#vis-container').append('<canvas id="vis-canvas"></canvas>');
 
   this.canvas = document.getElementById('vis-canvas');
   this.ctx = this.canvas.getContext('2d');
 
-  this.canvas.width = window.innerWidth;
-  this.canvas.height = window.innerHeight;
+  $('#vis-container').css('display', 'block');
+  $('#vis-container').width('100%');
+  $('#vis-container').height('100%');
+
+  $('#vis-canvas').css('display', 'block');
+  $('#vis-canvas').width('100%');
+  $('#vis-canvas').height('100%');
+
+  this.canvas.width  = this.canvas.offsetWidth;
+  this.canvas.height = this.canvas.offsetHeight;
+
+  this.middle = this.canvas.height / 2;
+  this.half = this.canvas.width / 2;
+
+  window.addEventListener('resize', () => {
+
+    $('#vis-container').width('100%');
+    $('#vis-container').height('100%');
+    this.canvas.style.width = '100%';
+    this.canvas.style.height = '100%';
+    this.canvas.width  = this.canvas.offsetWidth;
+    this.canvas.height = this.canvas.offsetHeight;
+  
+    this.middle = this.canvas.height / 2;
+    this.half = this.canvas.width / 2;
+  })
 
   this.ctx.fillStyle = '#000000';
   this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-  window.addEventListener('resize', () => {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-  });
+  const freqOffset = 325;
+  const midoff = 1;
 
   this.audio = new Audio();
   this.audioPlay = new Audio();
 
-  this.audio.src = src;
+  this.audio.src = this.src;
   this.audio.crossOrigin = "anonymous";
 
   this.audioPlay.src = this.audio.src;
@@ -54,7 +100,7 @@ function visualizer(src, color, scolor){
   this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
 
   this.audioPlay.addEventListener('canplay', () => {
-    $('#vis').append(this.audioPlay);
+    $('#vis-audio').append(this.audioPlay);
     this.ready = true;
   });
 
@@ -63,58 +109,106 @@ function visualizer(src, color, scolor){
 
     let refresher = setInterval(() => {
       if(this.ready) {
-        this.audioPlay.play();
         this.audio.play();
+        this.audioPlay.play();
 
         this.audio.currentTime = this.audioPlay.currentTime;
         this.draw();
         clearInterval(refresher);
       }
     }, 500);
+  }
 
+
+  this.pause = () => {
+    this.audio.pause();
+    this.audioPlay.pause();
+    this.audio.currentTime = this.audioPlay.currentTime;
+  }
+
+  this.close = () => {
+    this.audio.currentTime = 0;
+    this.audio.pause();
+    this.audio.load();
+    this.audio.preload = 'none';
+    this.audio.src = '';
+
+    this.audioPlay.currentTime = 0;
+    this.audioPlay.pause();
+    this.audioPlay.load();
+    this.audioPlay.preload = 'none';
+    this.audioPlay.src = '';
+
+    this.audioContext.close();
+    $('#vis-audio').remove();
+    $('#vis-canvas').remove();
+  }
+
+  this.onlyVisualize = () => {
+    this.audio.play();
+    this.draw();
   }
 
   this.draw = () => {
-    if(this.canvas.width !== window.innerWidth){
-      return;
-    }
-
-    if(this.canvas.height !== window.innerHeight){
-      return;
-    }
-
+    
     this.ctx.fillStyle = '#000000';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     requestAnimationFrame(this.draw);
     this.analyser.getByteFrequencyData(this.frequencyData);
 
-    let half = window.innerWidth / 2;
-    let freqOffset = 325;
-    let size = half / (this.analyser.frequencyBinCount - freqOffset);
-    let middle = this.canvas.height / 2 - 100;
-    let midoff = 1;
+    let size = this.half / (this.analyser.frequencyBinCount - freqOffset);
 
     for (let i = 0; i < this.analyser.frequencyBinCount - freqOffset; ++i) {
       let freqValue = this.limitOnHeight(this.frequencyData[i]);
 
-      this.ctx.fillStyle = color;
-      this.ctx.fillRect(i * (size), middle - midoff - freqValue, (size - 0.5), freqValue);
-      this.ctx.fillRect(half + (this.analyser.frequencyBinCount - 1 - i) * (size ) - size * freqOffset, middle - midoff - freqValue, (size - 0.5), freqValue);
+      this.ctx.fillStyle = this.mapColor(this.normalize(freqValue), this.percentColors);
+      this.ctx.fillRect(i * (size), this.middle - midoff - freqValue, (size - 0.5), freqValue);
+      this.ctx.fillRect(this.half + (this.analyser.frequencyBinCount - 1 - i) * (size ) - size * freqOffset, this.middle - midoff - freqValue, (size - 0.5), freqValue);
 
-      this.ctx.fillStyle = scolor;
-      this.ctx.fillRect(i * (size), middle + midoff, (size - 0.5), freqValue);
-      this.ctx.fillRect(half + (this.analyser.frequencyBinCount - 1 - i) * (size) - size * freqOffset, middle + midoff, (size - 0.5), freqValue);
+      this.ctx.fillStyle = this.mapColor(this.normalize(freqValue), this.weakPercentColors);
+      this.ctx.fillRect(i * (size), this.middle + midoff, (size - 0.5), freqValue);
+      this.ctx.fillRect(this.half + (this.analyser.frequencyBinCount - 1 - i) * (size) - size * freqOffset, this.middle + midoff, (size - 0.5), freqValue);
 
     }
   }
 
 
   this.limitOnHeight = val => {
-    return ((this.canvas.height / 3) * (val / 128));
+    return ((this.canvas.height / 2) * (val / 256));
   }
+
+  this.normalize = val => {
+    return ((1) * (val / 256));
+  }
+
+  this.percentColors = [
+    { pct: 0.0, color: { r: 0x00, g: 0x00, b: 0xff } },
+    { pct: 0.5, color: { r: 0xff, g: 0x00, b: 0xff } },
+    { pct: 1.0, color: { r: 0xff, g: 0x00, b: 0x00 } } ];
+
+  this.weakPercentColors = [
+    { pct: 0.0, color: { r: 0x00, g: 0x00, b: 0x77 } },
+    { pct: 0.5, color: { r: 0x77, g: 0x00, b: 0x66 } },
+    { pct: 1.0, color: { r: 0x77, g: 0x00, b: 0x00 } } ];
+
+  this.mapColor = (pct, colors) => {
+    for (var i = 1; i < colors.length - 1; ++i) {
+        if (pct < colors[i].pct) {
+            break;
+        }
+    }
+    var lower = colors[i - 1];
+    var upper = colors[i];
+    var range = upper.pct - lower.pct;
+    var rangePct = (pct - lower.pct) / range;
+    var pctLower = 1 - rangePct;
+    var pctUpper = rangePct;
+    var color = {
+        r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+        g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+        b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+    };
+    return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+  }  
 }
-
-let vis = new visualizer('http://localhost:3000/music?id=5dznGsQmwuQ', '#ff0000', '#770022');
-
-vis.play();
