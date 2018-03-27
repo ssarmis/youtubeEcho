@@ -30,14 +30,28 @@ app.get('/upage', (req, res) => {
   res.sendFile(`${ROOT_PATH}/upage.html`);
 });
 
+app.get('/login', (req, res) => {
+  res.sendFile(`${ROOT_PATH}/login.html`);
+});
+
+app.post('/login', (req, res) =>{
+  res.sendFile(`${ROOT_PATH}/login.html`);
+  console.log(req.body.username);
+  console.log(req.body.password);
+});
+
+app.get('/register', (req, res) =>{
+  res.sendFile(`${ROOT_PATH}/register.html`);
+});
+
 app.get('/reqsgl', (req, res) => {
   let plid = req.query.id;
-  
+
   ytpl(`${plid}`, (err, playlist) => {
     if(err){
       console.log(err);
       return;
-    } 
+    }
 
     res.setHeader('Content-Type', 'application/json');
     res.send(playlist);
@@ -65,7 +79,7 @@ app.get('/reqpl', (req, res) => {
 
 let server = app.listen(3000, () => {
   console.log('Listening on port 3000!');
-  
+
   process.argv.forEach((val, index, array) => {
     if(val === "testing"){
       setInterval(process.exit(0), 3000);
@@ -77,4 +91,3 @@ let server = app.listen(3000, () => {
 // IMPLEMENT CLUSTER AND DOMAIN FOR HANDLING EXCEPTIONS
 process.on('uncaughtException', err => console.log(err));
 //
-
