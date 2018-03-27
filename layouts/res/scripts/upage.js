@@ -13,14 +13,14 @@ function startVis(id){
   if(currentId === id){
     return;
   }
-  
+
   currentId = id;
 
   $.get(`/reqsgl?id=${id}`, data => {
     currentList = data.items.slice();
 
     let opt = {
-        src: `http://192.168.0.134:3000/music?id=${currentList[0].id}`,
+        src: `http://192.168.0.101:3000/music?id=${currentList[0].id}`,
         coloru: '#ff0000',
         colorm: '#770077',
         colord: '#770022'
@@ -51,16 +51,16 @@ $.get('/reqpl', data => {
     if(item.title.length > allowed - 3){
       title += '...';
     }
-    
-    let cclk = isTouchDevice ? 
+
+    let cclk = isTouchDevice ?
       `ontouchend="startVis('${item.id}')"`:
       `onclick="startVis('${item.id}')"`
-    
+
     $('#main-container').append(`
       <div class="pl-container">
         <h2>${title}</h2><br>
         <div class='pl-btn-date'>
-          <i class="fas fa-play-circle" 
+          <i class="fas fa-play-circle"
           ${cclk}
           ></i>
         </div>

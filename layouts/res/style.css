@@ -36,7 +36,7 @@ body {
 #navbar-left .navbar-icon i {
   position: relative;
   margin-top: 1vw;
-  font-size: 3vw;  
+  font-size: 3vw;
 }
 
 #main-container {
@@ -85,12 +85,12 @@ body {
   margin-right: auto;
   left: 0;
   right: 0;
-  font-size: 6vw; 
+  font-size: 6vw;
   cursor: pointer;
 }
 
 @media only screen and (max-width: 1000px) {
-  
+
   #main-container {
     top: 0px;
     right: 0px;
@@ -115,7 +115,7 @@ body {
   #navbar-left .navbar-icon i {
     position: relative;
     margin-top: 1vw;
-    font-size: 8vw;  
+    font-size: 8vw;
   }
   #main-container .pl-container .pl-btn-date{
     position: absolute;
@@ -123,6 +123,69 @@ body {
     margin-right: auto;
     left: 0;
     right: 0;
-    font-size: 16vw; 
+    font-size: 16vw;
   }
+}
+
+#wrap{
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  position:absolute;
+}
+
+#wrap #loginDiv{
+  border: 4px inset gray;
+  margin: 0 auto;
+  display: inline-block;
+  position: relative;
+  top: 25vh;
+  width: 20vw;
+  height: 50vh;
+  text-align: center;
+  background-color: #f4f4f4;
+}
+
+#wrap #registerDiv{
+  border: 4px inset gray;
+  margin: 0 auto;
+  display: inline-block;
+  position: relative;
+  top: 10vh;
+  width: 20vw;
+  height: 70vh;
+  text-align: center;
+  background-color: #f4f4f4;
+}
+
+#loginDiv h1{
+  font-size: 7vh;
+  margin-top: -1vh;
+  margin-bottom: 3vh;
+}
+
+.formInput{
+  background-color: #f4f4f4;
+  font-size: 3vh;
+  text-align: center;
+  margin-top: 3vh;
+  border: 0px;
+  border-bottom: 2px;
+  border-style: solid;
+  border-color: black;
+}
+
+.butt{
+  font-size: 3vh;
+  margin-top: 6vh;
+  width: 10vw;
+  height: 5vh;
+  background-color: #f4f4f4;
+  border: 2px solid black;
+}
+
+.butt:hover{
+  cursor: pointer;
+  background-color: #d3d3d3;
 }
