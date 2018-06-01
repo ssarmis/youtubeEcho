@@ -36,7 +36,7 @@ body {
 #navbar-left .navbar-icon i {
   position: relative;
   margin-top: 1vw;
-  font-size: 3vw;
+  font-size: 3vw;  
 }
 
 #main-container {
@@ -52,10 +52,11 @@ body {
 }
 
 #main-container .pl-container {
+  text-decoration: none;
   display: inline-block;
   position: relative;
   width: 19%;
-  height: 35%;
+  height: 15%;
   background-color:#111;
   margin-left: 0.7%;
   margin-top: 0.5%;
@@ -85,12 +86,12 @@ body {
   margin-right: auto;
   left: 0;
   right: 0;
-  font-size: 6vw;
+  font-size: 4vw; 
   cursor: pointer;
 }
 
 @media only screen and (max-width: 1000px) {
-
+  
   #main-container {
     top: 0px;
     right: 0px;
@@ -102,7 +103,7 @@ body {
     display: block;
     margin: 0 auto;
     width: 96%;
-    height: 50%;
+    height: 20%;
     margin-top: 2%;
   }
 
@@ -115,7 +116,7 @@ body {
   #navbar-left .navbar-icon i {
     position: relative;
     margin-top: 1vw;
-    font-size: 8vw;
+    font-size: 8vw;  
   }
   #main-container .pl-container .pl-btn-date{
     position: absolute;
@@ -123,69 +124,174 @@ body {
     margin-right: auto;
     left: 0;
     right: 0;
-    font-size: 16vw;
+    font-size: 8vw; 
   }
 }
 
-#wrap{
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*******************/
+
+
+
+
+#playlists-holder {
+  background-color: #333;
+  overflow: auto;
+  display: inline-block;
+  position: absolute;
+  float: left;
+  top: 0px;
+  left: 0px;
+  width: 50%; /* 6% taken from the navbar*/
   height: 100%;
+}
+
+#card-track {
+  background-color: #000;
+  display: inline-block;
+  float: right;
+  top: 0px;
+  right: 0px;
+  width: 50%;
+  height: 100%;
+}
+
+#tracks-list {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 5px;
+  display: block;
   width: 100%;
+  height: 45%;
+}
+
+#tracks-list a {
+  text-decoration: none;
+  color: #eee;
+  background-color: #333;
+  padding-top: 5px;
+  padding-left: 5px;
+  display: block;
+  width: 100%;
+}
+
+#tracks-list a:hover {
+  text-decoration: none;
+  color: #222;
+  background-color: #fff;
+}
+
+#playlist-title {
+  padding-top: 5px;
+  padding-bottom: 5px;
   text-align: center;
-  display: inline-block;
-  position:absolute;
+  color: #eee;
+  font-size: 24px;
 }
 
-#wrap #loginDiv{
-  border: 4px inset gray;
-  margin: 0 auto;
-  display: inline-block;
-  position: relative;
-  top: 25vh;
-  width: 20vw;
-  height: 50vh;
-  text-align: center;
-  background-color: #f4f4f4;
+#song-title {
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  text-align: left;
+  color: #eee;
+  font-size: 18px;
 }
 
-#wrap #registerDiv{
-  border: 4px inset gray;
-  margin: 0 auto;
-  display: inline-block;
-  position: relative;
-  top: 10vh;
-  width: 20vw;
-  height: 70vh;
-  text-align: center;
-  background-color: #f4f4f4;
+#tracks-ul {
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0px;
 }
 
-#loginDiv h1{
-  font-size: 7vh;
-  margin-top: -1vh;
-  margin-bottom: 3vh;
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
-.formInput{
-  background-color: #f4f4f4;
-  font-size: 3vh;
-  text-align: center;
-  margin-top: 3vh;
-  border: 0px;
-  border-bottom: 2px;
-  border-style: solid;
-  border-color: black;
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #222; 
+    border-radius: 10px;
 }
 
-.butt{
-  font-size: 3vh;
-  margin-top: 6vh;
-  width: 10vw;
-  height: 5vh;
-  background-color: #f4f4f4;
-  border: 2px solid black;
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #ccc; 
 }
 
-.butt:hover{
-  cursor: pointer;
-  background-color: #d3d3d3;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

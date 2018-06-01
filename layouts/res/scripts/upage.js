@@ -7,41 +7,67 @@ let currentId = false;
 let currentList = new Array();
 let isTouchDevice = 'ontouchstart' in document.documentElement;
 
-$('#player-container').hide();
+// $('#player-container').hide();
 
-function startVis(id){
+function addSong(song){
+  let cclk = isTouchDevice ? 
+  `ontouchend='changePlay("${song.id}", "${song.title}")'`:
+  `onclick='changePlay("${song.id}", "${song.title}")'`
+
+  $('#tracks-ul').append(
+    `<li><a href="#"
+    ${cclk}>
+    ${song.title}</a></li>`
+  );
+}
+
+function changePlay(songId, songTitle){
+  $('#song-title').html(`Now playing: ${songTitle}`);
+  let opt = {
+      src: `/music?id=${songId}`,
+      coloru: '#ff0000',
+      colorm: '#770077',
+      colord: '#770022'
+  };
+
+  if(vis !== undefined){
+    vis.pause();
+    vis.close();
+  }
+
+  if(!alreadyUp){
+      vis = new visualizer(opt);
+      vis.play();
+      alreadyUp = !alreadyUp;
+  } else {
+      vis = new visualizer(opt);
+      vis.play();
+  }
+}
+
+function startVis(id, title){
   if(currentId === id){
     return;
   }
-
+  
+  $('#tracks-ul').html('');
+  $('#playlist-title').html(`${title}`);
   currentId = id;
 
   $.get(`/reqsgl?id=${id}`, data => {
     currentList = data.items.slice();
+    currentList.forEach(song => addSong(song));
 
     let opt = {
-        src: `http://192.168.0.101:3000/music?id=${currentList[0].id}`,
+        src: `/music?id=${currentList[0].id}`,
         coloru: '#ff0000',
         colorm: '#770077',
         colord: '#770022'
     };
 
-    if(vis !== undefined){
-      vis.pause();
-      vis.close();
-    }
-
-    if(!alreadyUp){
-      $('#player-container').slideDown('fast', function() {
-        vis = new visualizer(opt);
-        vis.play();
-        alreadyUp = !alreadyUp;
-      });
-    } else {
-        vis = new visualizer(opt);
-        vis.play();
-    }
+    changePlay(currentList[0].id, currentList[0].title);
   });
+
 }
 
 $.get('/reqpl', data => {
@@ -51,24 +77,18 @@ $.get('/reqpl', data => {
     if(item.title.length > allowed - 3){
       title += '...';
     }
-
-    let cclk = isTouchDevice ?
-      `ontouchend="startVis('${item.id}')"`:
-      `onclick="startVis('${item.id}')"`
-
-    $('#main-container').append(`
-      <div class="pl-container">
+    
+    let cclk = isTouchDevice ? 
+      `ontouchend='startVis("${item.id}", "${item.title}")'`:
+      `onclick='startVis("${item.id}", "${item.title}")'`
+    
+    $('#playlists-holder').append(`
+      <a href='#' class="pl-container" ${cclk}>
         <h2>${title}</h2><br>
-        <div class='pl-btn-date'>
-          <i class="fas fa-play-circle"
-          ${cclk}
-          ></i>
-        </div>
-
         <div class='pl-detail-date'>
           <h4>${item.last_updated}</h4>
         </div>
-      </div>
-      `)
+      </a>
+      `);
   });
 });

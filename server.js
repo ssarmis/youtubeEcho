@@ -138,6 +138,11 @@ app.get('/reqpl', (req, res) => {
         "title": "Pop Music Playlist: Timeless Pop Hits (Updated Weekly 2018)",
         "last_updated": "Last updated on Mar 5, 2018",
       },
+      {
+        "id": "PLE9NBypnb2JnDYh7Z5OQAo9MjDj2Eef9m",
+        "title": "Undertale Covers",
+        "last_updated": "Last updated on Dec 16, 2017",
+      },
     ]
   }));
 });
