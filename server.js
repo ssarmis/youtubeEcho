@@ -131,17 +131,14 @@ app.get('/reqpl', (req, res) => {
       {
         "id": "PLRBp0Fe2GpglkzuspoGv-mu7B2ce9_0Fn",
         "title": "💥 NCS: Indie Dance",
-        "last_updated": "Last updated on Dec 16, 2017",
       },
       {
         "id": "PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj",
         "title": "Pop Music Playlist: Timeless Pop Hits (Updated Weekly 2018)",
-        "last_updated": "Last updated on Mar 5, 2018",
       },
       {
         "id": "PLE9NBypnb2JnDYh7Z5OQAo9MjDj2Eef9m",
         "title": "Undertale Covers",
-        "last_updated": "Last updated on Dec 16, 2017",
       },
     ]
   }));
