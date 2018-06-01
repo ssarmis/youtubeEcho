@@ -165,7 +165,7 @@ function visualizer(opt){
 
       this.ctx.fillStyle = this.mapColor(this.normalize(freqValue), this.percentColors);
 
-      if(!this.isMobile()){
+      if(this.isMobile()){
         this.ctx.fillRect(i * (size), this.middle - midoff - freqValue, (size - 0.5), freqValue);
         this.ctx.fillRect(this.half + (this.analyser.frequencyBinCount - 1 - i) * (size ) - size * freqOffset, this.middle - midoff - freqValue, (size - 0.5), freqValue);
         
@@ -173,7 +173,7 @@ function visualizer(opt){
         this.ctx.fillRect(i * (size), this.middle + midoff, (size - 0.5), freqValue);
         this.ctx.fillRect(this.half + (this.analyser.frequencyBinCount - 1 - i) * (size) - size * freqOffset, this.middle + midoff, (size - 0.5), freqValue);
       } else {
-        this.ctx.fillRect(i * (size), 2 * this.middle - midoff - freqValue, (size), freqValue);
+        this.ctx.fillRect(i * (size * 2), 2 * this.middle - midoff - freqValue, (size * 2), freqValue);
       }
     }
   }
