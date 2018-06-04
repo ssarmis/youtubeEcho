@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const cookieSession = require('cookie-session');
 const express = require('express');
 const bodyParser = require('body-parser');
 const yas = require('youtube-audio-stream');
@@ -9,6 +10,7 @@ const http = require('http');
 const bcrypt = require('bcryptjs');
 const validator = require('express-validator');
 const passport = require('passport');
+const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 
 
@@ -22,14 +24,35 @@ app.use('/', express.static(ROOT_PATH));
 app.use('/res', express.static(`${ROOT_PATH}res/`));
 app.use(validator());
 
-require('./pass')(passport);
+app.use(cookieSession({
+	name: 'session',
+	keys: ['key1'],
+	maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
+// Express Session middleware
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true,
+}));
+
+require('./pass')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
 
+app.use(function(req, res, next){
+	if(req.user != null){
+		req.session.email = req.user.email;
+	}
+	
+	next();
+});
+
+
 app.get('/', (req, res) => {
-  res.sendFile(`${ROOT_PATH}/index.html`);
+  res.sendFile(`${ROOT_PATH}/login.html`);
 });
 
 app.get('/music', (req, res) => {
@@ -40,18 +63,32 @@ app.get('/music', (req, res) => {
 });
 
 app.get('/upage', (req, res) => {
-  res.sendFile(`${ROOT_PATH}/upage.html`);
+	if(req.user == null){
+		res.redirect('/login');
+	}else{
+		res.sendFile(`${ROOT_PATH}/upage.html`);
+	}
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(`${ROOT_PATH}/login.html`);
+	if(req.user != null){
+		res.redirect('/upage');
+	}else{
+		res.sendFile(`${ROOT_PATH}/login.html`);
+	}
 });
 
-app.post('/login', (req, res, next) =>{
+app.post('/login', (req, res, next) =>{	
 	passport.authenticate('local', {
-		successRedirect: '/',
-		failureRedirect: '/',
+		successRedirect: '/upage',
+		failureRedirect: '/login',
 	})(req, res, next);
+});
+
+app.get('/logout', function(req, res){
+  req.logout();
+  req.session = null;
+  res.redirect('/login')
 });
 
 app.get('/register', (req, res) =>{
@@ -88,9 +125,9 @@ app.post('/register', (req, res) => {
 						inputData = JSON.stringify(inputData);
 
 						var request = new http.ClientRequest({
-						host: "25.81.204.11", // change on for laptop
+						host: "localhost", // change on for laptop
 						port: 8080,
-						path: "/TP/addUser",
+						path: "/test/addUser",
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
@@ -122,9 +159,9 @@ app.get('/reqsgl', (req, res) => {
   });
 });
 
-app.get('/reqpl', (req, res) => {
+/*app.get('/reqpl', (req, res) => {
   let options = {
-    host: "25.81.204.11", // change for laptop
+    host: "localhost", // change for laptop
     port: 8080,
     path: "/TP/getUserData",
     method: "POST",
@@ -195,9 +232,9 @@ app.get('/reqpl', (req, res) => {
       ]
     }));
   }
-  */
+  
 });
-
+*/
 app.post('/addPlaylist', (req, res) => {
   // send the request to the database and add 
   // the playlist to the user
