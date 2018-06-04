@@ -8,9 +8,9 @@ module.exports = function(passport){
 			inputData = JSON.stringify(inputData);
 			
 			let options = {
-				host: "127.0.0.1",
+				host: "25.81.204.11", // change for laptop
 				port: 8080,
-				path: "/test/getUserData",
+				path: "/TP/getUserData",
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -31,7 +31,7 @@ module.exports = function(passport){
 					console.log(`Body: ${chunk}`);
 					let data = JSON.parse(chunk);
 					
-					bcrypt.compare(password, data.password, (err, isMatch) =>{
+					bcrypt.compare(password, data.password, (err, isMatch) => {
 						if(err){
 							console.log(err);
 							return;
@@ -39,7 +39,7 @@ module.exports = function(passport){
 						
 						if(isMatch){
 							return done(null, data);
-						}else{
+						} else {
 							return done(null, false, {message: "Wrong user/password"});
 						}
 					});
@@ -70,9 +70,9 @@ module.exports = function(passport){
 			inputData = JSON.stringify(inputData);
 			
 			let options = {
-				host: "127.0.0.1",
+				host: "25.81.204.11", // change on laptop
 				port: 8080,
-				path: "/test/getUserData",
+				path: "/TP/getUserData",
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

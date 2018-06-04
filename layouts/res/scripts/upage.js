@@ -2,12 +2,25 @@
 
 
 let vis;
+let addUp = false;
 let alreadyUp = false;
 let currentId = false;
 let currentList = new Array();
 let isTouchDevice = 'ontouchstart' in document.documentElement;
 
-// $('#player-container').hide();
+$('#add-container').hide();
+
+function openAdd(){
+  if(addUp) {
+    $('#add-container').hide();    
+    addUp = !addUp;
+    return;
+  }
+
+  $('#add-container').slideDown("fast", function(){
+    addUp = true;
+  });  
+}
 
 function addSong(song){
   let cclk = isTouchDevice ? 

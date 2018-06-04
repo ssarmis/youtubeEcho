@@ -51,7 +51,6 @@ app.post('/login', (req, res, next) =>{
 	passport.authenticate('local', {
 		successRedirect: '/',
 		failureRedirect: '/',
-		failureFlash: true
 	})(req, res, next);
 });
 
@@ -89,9 +88,9 @@ app.post('/register', (req, res) => {
 						inputData = JSON.stringify(inputData);
 
 						var request = new http.ClientRequest({
-						host: "127.0.0.1",
+						host: "25.81.204.11", // change on for laptop
 						port: 8080,
-						path: "/test/addUser",
+						path: "/TP/addUser",
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
@@ -124,24 +123,84 @@ app.get('/reqsgl', (req, res) => {
 });
 
 app.get('/reqpl', (req, res) => {
+  let options = {
+    host: "25.81.204.11", // change for laptop
+    port: 8080,
+    path: "/TP/getUserData",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+      //"Content-Length": Buffer.byteLength(inputData)
+    }
+  }
 
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({
-    "items":[
-      {
-        "id": "PLRBp0Fe2GpglkzuspoGv-mu7B2ce9_0Fn",
-        "title": "💥 NCS: Indie Dance",
-      },
-      {
-        "id": "PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj",
-        "title": "Pop Music Playlist: Timeless Pop Hits (Updated Weekly 2018)",
-      },
-      {
-        "id": "PLE9NBypnb2JnDYh7Z5OQAo9MjDj2Eef9m",
-        "title": "Undertale Covers",
-      },
-    ]
-  }));
+  var request = new http.request(options, res => {
+    console.log(`Status: ${res.statusCode}`);
+    let items = new Array();
+
+    res.on('data', chunk => {
+      console.log(`Body: ${chunk}`);
+      let data = JSON.parse(chunk);
+      // loop the playlists, or not even
+      // just send them to the page.
+      // make sure to call ytpl beforehand to get all the details needed in the page
+      //  id 
+      //  title
+      // the playlist link is the id already
+      // just need it for the title, what a waste
+      let playlists = data.playlists.splice();
+      playlists.forEach(item => {
+        ytpl(item.link, (err, playlist) => {
+        if(err){
+          console.log(err);
+          return;
+        }
+
+        items.push_back({
+          playlist.id, 
+          playlist.title
+        });
+
+      });
+    });
+  });
+
+  res.on('end', () => {
+    req.send(items);
+  });
+
+  // loop here
+  /*
+  ytpl(`${plid}`, (err, playlist) => {
+    if(err){
+      console.log(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({
+      "items":[
+        {
+          "id": "PLRBp0Fe2GpglkzuspoGv-mu7B2ce9_0Fn",
+          "title": "💥 NCS: Indie Dance",
+        },
+        {
+          "id": "PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj",
+          "title": "Pop Music Playlist: Timeless Pop Hits (Updated Weekly 2018)",
+        },
+        {
+          "id": "PLE9NBypnb2JnDYh7Z5OQAo9MjDj2Eef9m",
+          "title": "Undertale Covers",
+        },
+      ]
+    }));
+  }
+  */
+});
+
+app.post('/addPlaylist', (req, res) => {
+  // send the request to the database and add 
+  // the playlist to the user
 });
 
 let server = app.listen(3000, () => {
