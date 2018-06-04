@@ -8,9 +8,9 @@ module.exports = function(passport){
 			inputData = JSON.stringify(inputData);
 			
 			let options = {
-				host: "25.81.204.11", // change for laptop
+				host: "localhost", // change for laptop
 				port: 8080,
-				path: "/TP/getUserData",
+				path: "/test/getUserData",
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -19,7 +19,7 @@ module.exports = function(passport){
 			}
 
 			var request = new http.request(options, res => {
-				console.log(`Status: ${res.statusCode}`);
+				//console.log(`Status: ${res.statusCode}`);
 				res.setEncoding('utf-8');
 				
 				if(res.statusCode == 403){
@@ -28,7 +28,7 @@ module.exports = function(passport){
 				}
 				
 				res.on('data', chunk => {
-					console.log(`Body: ${chunk}`);
+					//console.log(`Body: ${chunk}`);
 					let data = JSON.parse(chunk);
 					
 					bcrypt.compare(password, data.password, (err, isMatch) => {
@@ -48,7 +48,7 @@ module.exports = function(passport){
 				});
 				
 				res.on('end', () => {
-					console.log("End of data");
+					//console.log("End of data");
 				});
 			});
 			
@@ -61,18 +61,17 @@ module.exports = function(passport){
 	}));
 		
 	passport.serializeUser((user, done) => {
-		console.log(user.id);
-		done(null, user.id);
+		done(null, user.email);
 	});
 
 	passport.deserializeUser( (username, done) => {
-		let inputData = {email:username};
+		let inputData = {email: username};
 			inputData = JSON.stringify(inputData);
 			
 			let options = {
-				host: "25.81.204.11", // change on laptop
+				host: "localhost", // change on laptop
 				port: 8080,
-				path: "/TP/getUserData",
+				path: "/test/getUserData",
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -81,17 +80,18 @@ module.exports = function(passport){
 			}
 
 			var request = new http.request(options, res => {
-				console.log(`Status: ${res.statusCode}`);
+				//console.log(`Status: ${res.statusCode}`);
 				res.setEncoding('utf-8');
 				
 				res.on('data', chunk => {
-					console.log(`Body: ${chunk}`);
+					//console.log(`Body: ${chunk}`);
+					//console.log(chunk);
 					let data = JSON.parse(chunk);
-					return done(err, data);
+					return done(null, data);
 				});
 				
 				res.on('end', () => {
-					console.log("End of data");
+					//console.log("End of data");
 				});
 			});
 			request.on('error', err => {
@@ -101,4 +101,4 @@ module.exports = function(passport){
 			request.write(inputData);
 			request.end();
 	});
-}
+};
