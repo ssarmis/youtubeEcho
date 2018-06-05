@@ -23,8 +23,10 @@
 
   <div id="add-container">
     <div class="frame">
-      <input type="text" name="id"/>
-      <input type="button" value="Add playlist" name="add">
+      <form id="add-form" action="/addPlaylist" method="POST">
+        <input type="text" name="id"/>
+        <input type="submit" value="Add playlist" name="add">
+      </form>
     </div>
   </div>
 

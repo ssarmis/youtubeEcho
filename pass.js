@@ -8,9 +8,9 @@ module.exports = function(passport){
 			inputData = JSON.stringify(inputData);
 			
 			let options = {
-				host: "localhost", // change for laptop
+				host: "25.82.135.108", // change for laptop
 				port: 8080,
-				path: "/test/getUserData",
+				path: "/TP/getUserData",
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -69,9 +69,9 @@ module.exports = function(passport){
 			inputData = JSON.stringify(inputData);
 			
 			let options = {
-				host: "localhost", // change on laptop
+				host: "25.82.135.108", // change on laptop
 				port: 8080,
-				path: "/test/getUserData",
+				path: "/TP/getUserData",
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

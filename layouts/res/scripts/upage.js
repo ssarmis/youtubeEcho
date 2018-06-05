@@ -10,6 +10,19 @@ let isTouchDevice = 'ontouchstart' in document.documentElement;
 
 $('#add-container').hide();
 
+$('#add-form').submit(function(e){
+    e.preventDefault();
+    $.ajax({
+        url:'/addPlaylist',
+        type:'post',
+        data:$('#add-form').serialize(),
+        success:function(){
+          $('#add-container').hide();
+          addUp = !addUp;
+        }
+    });
+});
+
 function openAdd(){
   if(addUp) {
     $('#add-container').hide();    
@@ -84,7 +97,9 @@ function startVis(id, title){
 }
 
 $.get('/reqpl', data => {
-  data.items.forEach(item => {
+  let items = JSON.parse(data);
+  console.log(items);
+  items.forEach(item => {
     let allowed = 30;
     let title = item.title.substring(0, allowed - 3);
     if(item.title.length > allowed - 3){
@@ -99,7 +114,6 @@ $.get('/reqpl', data => {
       <a href='#' class="pl-container" ${cclk}>
         <h2>${title}</h2><br>
         <div class='pl-detail-date'>
-          <h4>${item.last_updated}</h4>
         </div>
       </a>
       `);

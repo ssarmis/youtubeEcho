@@ -125,9 +125,9 @@ app.post('/register', (req, res) => {
 						inputData = JSON.stringify(inputData);
 
 						var request = new http.ClientRequest({
-						host: "localhost", // change on for laptop
+						host: "25.82.135.108", // change on for laptop
 						port: 8080,
-						path: "/test/addUser",
+						path: "/TP/addUser",
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
@@ -159,52 +159,58 @@ app.get('/reqsgl', (req, res) => {
   });
 });
 
-/*app.get('/reqpl', (req, res) => {
+app.get('/reqpl', (req, resp) => {
+  let inputData = {email: req.session.email};
+  inputData = JSON.stringify(inputData);
+
   let options = {
-    host: "localhost", // change for laptop
+    host: "25.82.135.108", // change for laptop
     port: 8080,
     path: "/TP/getUserData",
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
-      //"Content-Length": Buffer.byteLength(inputData)
+      "Content-Type": "application/json",
+      "Content-Length": Buffer.byteLength(inputData)
     }
   }
 
-  var request = new http.request(options, res => {
-    console.log(`Status: ${res.statusCode}`);
-    let items = new Array();
+  var request = new http.ClientRequest(options);
+  
+  request.end(inputData);
+
+  let items = new Array();
+
+  request.on('response', res => {
 
     res.on('data', chunk => {
-      console.log(`Body: ${chunk}`);
       let data = JSON.parse(chunk);
-      // loop the playlists, or not even
-      // just send them to the page.
-      // make sure to call ytpl beforehand to get all the details needed in the page
-      //  id 
-      //  title
-      // the playlist link is the id already
-      // just need it for the title, what a waste
-      let playlists = data.playlists.splice();
+      let playlists = data.playlists;
+
+      console.log(playlists);
+      let cheat = 0;
       playlists.forEach(item => {
         ytpl(item.link, (err, playlist) => {
-        if(err){
-          console.log(err);
-          return;
-        }
-
-        items.push_back({
-          playlist.id, 
-          playlist.title
+          if(err){
+            console.log(err);
+            return;
+          }
+          console.log(playlist.title);
+          ++cheat;
+          items.push(
+            {
+              id: playlist.id, 
+              title: playlist.title
+            }
+          );
+          if(cheat == playlists.length){
+            console.log(JSON.stringify(items));
+            resp.send(JSON.stringify(items));
+          }
         });
-
       });
     });
   });
-
-  res.on('end', () => {
-    req.send(items);
-  });
+});
 
   // loop here
   /*
@@ -232,12 +238,29 @@ app.get('/reqsgl', (req, res) => {
       ]
     }));
   }
-  
-});
-*/
+  */
+
 app.post('/addPlaylist', (req, res) => {
-  // send the request to the database and add 
-  // the playlist to the user
+  let inputData = {email: req.session.email, link: req.body.id};
+  inputData = JSON.stringify(inputData);
+
+  let options = {
+    host: "25.82.135.108", // change for laptop
+    port: 8080,
+    path: "/TP/addPlaylistToUser",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Content-Length": Buffer.byteLength(inputData)
+    }
+  }
+
+  let request = new http.ClientRequest(options);
+  request.end(inputData);
+  
+  request.on("response", response => {
+    console.log("STATUS: " + response.statusCode);
+  });
 });
 
 let server = app.listen(3000, () => {
@@ -253,4 +276,3 @@ let server = app.listen(3000, () => {
 // MUST BE CHANGED
 // IMPLEMENT CLUSTER AND DOMAIN FOR HANDLING EXCEPTIONS
 process.on('uncaughtException', err => console.log(err));
-//
